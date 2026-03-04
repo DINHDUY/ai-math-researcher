@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:math.dartmouth.edu)",
+      "WebFetch(domain:www.cambridge.org)",
+      "WebFetch(domain:www.semanticscholar.org)"
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+\contentsline {part}{\tocpart {Part}{1}{Expository Survey}}{3}{part.1}%
+\contentsline {section}{\tocsection {}{1}{Introduction and historical context}}{3}{section.1}%
+\contentsline {subsection}{\tocsubsection {}{}{Scope of this paper}}{3}{section*.2}%
+\contentsline {subsection}{\tocsubsection {}{}{Notation}}{4}{section*.3}%
+\contentsline {section}{\tocsection {}{2}{Algebraic foundations}}{4}{section.2}%
+\contentsline {subsection}{\tocsubsection {}{2.1}{Fermat's Little Theorem and Euler's generalization}}{4}{subsection.2.1}%
+\contentsline {subsection}{\tocsubsection {}{2.2}{The group-theoretic perspective}}{4}{subsection.2.2}%
+\contentsline {subsection}{\tocsubsection {}{2.3}{The Carmichael function}}{4}{subsection.2.3}%
+\contentsline {subsection}{\tocsubsection {}{2.4}{Korselt's criterion and Carmichael numbers}}{5}{subsection.2.4}%
+\contentsline {section}{\tocsection {}{3}{Primality testing}}{5}{section.3}%
+\contentsline {subsection}{\tocsubsection {}{3.1}{The Fermat primality test}}{5}{subsection.3.1}%
+\contentsline {subsection}{\tocsubsection {}{3.2}{The Miller--Rabin test}}{5}{subsection.3.2}%
+\contentsline {subsection}{\tocsubsection {}{3.3}{Deterministic tests: Miller's conditional result and AKS}}{6}{subsection.3.3}%
+\contentsline {section}{\tocsection {}{4}{Cryptographic applications}}{6}{section.4}%
+\contentsline {subsection}{\tocsubsection {}{4.1}{RSA}}{6}{subsection.4.1}%
+\contentsline {subsection}{\tocsubsection {}{4.2}{Diffie--Hellman key exchange}}{6}{subsection.4.2}%
+\contentsline {subsection}{\tocsubsection {}{4.3}{ElGamal encryption and digital signatures}}{6}{subsection.4.3}%
+\contentsline {subsection}{\tocsubsection {}{4.4}{Elliptic curve cryptography}}{7}{subsection.4.4}%
+\contentsline {subsection}{\tocsubsection {}{4.5}{Post-quantum considerations}}{7}{subsection.4.5}%
+\contentsline {section}{\tocsection {}{5}{Carmichael numbers: classical theory and recent breakthroughs}}{7}{section.5}%
+\contentsline {subsection}{\tocsubsection {}{5.1}{Infinitude and counting function}}{7}{subsection.5.1}%
+\contentsline {subsection}{\tocsubsection {}{5.2}{Improved unconditional bounds: Harman}}{8}{subsection.5.2}%
+\contentsline {subsection}{\tocsubsection {}{5.3}{Conditional density results}}{8}{subsection.5.3}%
+\contentsline {subsection}{\tocsubsection {}{5.4}{Carmichael numbers in short intervals}}{9}{subsection.5.4}%
+\contentsline {subsection}{\tocsubsection {}{5.5}{Arithmetic progressions}}{9}{subsection.5.5}%
+\contentsline {subsection}{\tocsubsection {}{5.6}{Carmichael numbers with many prime factors}}{9}{subsection.5.6}%
+\contentsline {subsection}{\tocsubsection {}{5.7}{Tabulation}}{9}{subsection.5.7}%
+\contentsline {section}{\tocsection {}{6}{Open problems}}{10}{section.6}%
+\contentsline {subsection}{\tocsubsection {}{6.1}{The Erd\H {o}s density conjecture}}{10}{subsection.6.1}%
+\contentsline {subsection}{\tocsubsection {}{6.2}{The PSW conjecture}}{10}{subsection.6.2}%
+\contentsline {subsection}{\tocsubsection {}{6.3}{Wieferich primes}}{10}{subsection.6.3}%
+\contentsline {subsection}{\tocsubsection {}{6.4}{Carmichael's totient conjecture}}{10}{subsection.6.4}%
+\contentsline {subsection}{\tocsubsection {}{6.5}{Carmichael numbers in intervals of fixed polynomial length}}{10}{subsection.6.5}%
+\contentsline {part}{\tocpart {Part}{2}{Computational investigations}}{11}{part.2}%
+\contentsline {section}{\tocsection {}{7}{Computational analysis of Carmichael number distribution}}{11}{section.7}%
+\contentsline {subsection}{\tocsubsection {}{7.1}{The smoothness profile of Carmichael prime factors}}{11}{subsection.7.1}%
+\contentsline {subsection}{\tocsubsection {}{7.2}{The effective exponent function}}{11}{subsection.7.2}%
+\contentsline {subsection}{\tocsubsection {}{7.3}{Prime factor count distribution}}{12}{subsection.7.3}%
+\contentsline {subsection}{\tocsubsection {}{7.4}{Short-interval density measurements}}{12}{subsection.7.4}%
+\contentsline {section}{\tocsection {}{8}{Precise conjectures}}{13}{section.8}%
+\contentsline {subsection}{\tocsubsection {}{8.1}{Conjecture\nonbreakingspace J1: Refined Erd\H {o}s conjecture with explicit rate}}{13}{subsection.8.1}%
+\contentsline {subsection}{\tocsubsection {}{8.2}{Conjecture\nonbreakingspace J2: Short-interval equidistribution}}{14}{subsection.8.2}%
+\contentsline {section}{\tocsection {}{}{Discussion}}{15}{section*.4}%
+\contentsline {subsection}{\tocsubsection {}{}{Summary of contributions}}{15}{section*.5}%
+\contentsline {subsection}{\tocsubsection {}{}{Connections to the stress-test analysis}}{15}{section*.6}%
+\contentsline {subsection}{\tocsubsection {}{}{Limitations and future directions}}{15}{section*.7}%
+\contentsline {subsection}{\tocsubsection {}{}{Open questions}}{16}{section*.8}%
+\contentsline {section}{\tocsection {}{}{Acknowledgments}}{16}{section*.9}%
+\contentsline {section}{\tocsection {}{}{References}}{16}{section*.10}%

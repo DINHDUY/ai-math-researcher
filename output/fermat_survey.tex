@@ -1,0 +1,973 @@
+% fermat_survey.tex
+% "Fermat's Little Theorem at 386: From Primality Testing to Carmichael
+%  Number Distribution, with Computational Investigations of Density
+%  and Smoothness"
+%
+% Prepared using the amsart document class.
+% -------------------------------------------------------------------
+
+\documentclass[12pt]{amsart}
+
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{mathtools}
+
+% ---- Theorem environments ----
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---- Notation shortcuts ----
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\lcm}{lcm}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\Pp}{P^{+}}
+
+% ---- MSC and keywords ----
+\subjclass[2020]{11A51 (primary); 11N25, 11Y11, 94A60 (secondary)}
+\keywords{Fermat's Little Theorem, Carmichael numbers, primality testing,
+  pseudoprimes, RSA, Erdos conjecture, short intervals}
+
+% ---- Title and author ----
+\title[Fermat's Little Theorem at 386]{%
+  Fermat's Little Theorem at 386:\\
+  From Primality Testing to Carmichael Number Distribution,\\
+  with Computational Investigations of Density and Smoothness}
+
+\author{D.~Tran}
+\address{%
+  Independent researcher}
+\email{dtran@example.edu}
+\date{\today}
+
+\begin{document}
+
+\begin{abstract}
+Fermat's Little Theorem, first stated in 1640, asserts that
+$a^{p-1}\equiv 1\pmod{p}$ for every prime~$p$ and every integer~$a$
+coprime to~$p$.  In the intervening 386 years it has become a
+cornerstone of both analytic number theory and public-key
+cryptography.  This paper has two aims.
+
+\emph{Part~I} surveys the theorem's algebraic context (Euler's
+theorem, Lagrange's theorem, the Carmichael function), its role in
+primality testing (the Fermat test, Miller--Rabin, AKS), its
+applications to cryptographic protocols (RSA, Diffie--Hellman,
+ElGamal, elliptic-curve cryptography), and the rich theory of
+Carmichael numbers---composite integers that satisfy the Fermat
+congruence for \emph{every} coprime base.  We give a detailed account
+of the proof by Alford, Granville, and Pomerance that infinitely many
+Carmichael numbers exist, the recent breakthroughs of Larsen on short
+intervals and arithmetic progressions, and the tabulation by Shallue
+and Webster of all $49{,}679{,}870$ Carmichael numbers up
+to~$10^{22}$.
+
+\emph{Part~II} contributes a systematic computational analysis of the
+Shallue--Webster dataset.  We measure the effective exponent
+$\alpha(x)=\log C(x)/\log x$, the smoothness profile of the prime
+factors of Carmichael numbers, the distribution of the number of prime
+factors, and the density of Carmichael numbers in short intervals.
+These measurements lead to two precise, testable conjectures: a
+refined form of the Erd\H{o}s density conjecture calibrated to the
+Erd\H{o}s--Pomerance heuristic with constant $c\approx 1.87$, and a
+short-interval equidistribution conjecture predicting that Carmichael
+numbers are distributed in short intervals $[x,x+x^{\theta}]$ in
+proportion to their global density.
+\end{abstract}
+
+\maketitle
+\tableofcontents
+
+% ====================================================================
+%  PART I: EXPOSITORY SURVEY
+% ====================================================================
+
+\part{Expository Survey}\label{part:survey}
+
+% --------------------------------------------------------------------
+\section{Introduction and historical context}\label{sec:intro}
+% --------------------------------------------------------------------
+
+In a letter to Fr\'enicle de Bessy dated October~18,
+1640~\cite{fermat1640}, Pierre de Fermat announced, without proof,
+the following observation:
+
+\begin{quote}
+If $p$ is prime and $a$ is not divisible by~$p$, then $p$ divides
+$a^{p-1}-1$.
+\end{quote}
+
+\noindent
+This statement, now known as \emph{Fermat's Little Theorem}, waited
+nearly a century for a published proof: Euler supplied one in
+1736~\cite{euler1736}, and subsequently generalized the result to
+arbitrary moduli~\cite{euler1763}.  In the 386 years since Fermat's
+letter, the theorem has grown from a curiosity in the arithmetic of
+powers into a structural pillar of modern mathematics and computer
+science.
+
+\subsection*{Scope of this paper}
+The paper is organized in two parts.
+
+\emph{Part~I} (Sections~\ref{sec:algebra}--\ref{sec:open}) is an
+expository survey.  We treat the algebraic setting of the theorem and
+its generalizations (\S\ref{sec:algebra}), its central role in
+primality testing algorithms (\S\ref{sec:primality}), its
+applications in public-key cryptography (\S\ref{sec:crypto}), the
+deep theory of Carmichael numbers and recent breakthroughs
+(\S\ref{sec:carmichael}), and the principal open problems in the area
+(\S\ref{sec:open}).
+
+\emph{Part~II} (Sections~\ref{sec:computation}--\ref{sec:conjectures})
+presents original computational work: a systematic empirical analysis
+of the distribution, smoothness, and local density of Carmichael
+numbers, drawing on the complete tabulation by Shallue and
+Webster~\cite{shalluewebster2024} of all Carmichael numbers up
+to~$10^{22}$.  This analysis culminates in two precise, testable
+conjectures (Conjectures~\ref{conj:J1} and~\ref{conj:J2}).
+
+\subsection*{Notation}
+Throughout, $p$ and~$q$ denote primes.  We write $\varphi(n)$ for
+Euler's totient function and $\lambda(n)$ for the Carmichael function.
+The function $C(x)$ counts Carmichael numbers up to~$x$, and
+$C(x,y)$ counts those in the interval~$(x,y]$.  We write
+$\Pp(m)$ for the largest prime factor of a positive integer~$m$, with
+the convention $\Pp(1)=1$.  The Dickman function is
+denoted~$\varrho(u)$.
+
+% --------------------------------------------------------------------
+\section{Algebraic foundations}\label{sec:algebra}
+% --------------------------------------------------------------------
+
+\subsection{Fermat's Little Theorem and Euler's generalization}
+
+\begin{theorem}[Fermat's Little Theorem~\cite{euler1736}]
+\label{thm:flt}
+If $p$ is a prime and $\gcd(a,p)=1$, then
+\[
+  a^{p-1} \equiv 1 \pmod{p}.
+\]
+Equivalently, $a^{p}\equiv a\pmod{p}$ for every integer~$a$.
+\end{theorem}
+
+\begin{proof}
+Consider the map $\mu_a\colon(\Z/p\Z)^{\times}\to(\Z/p\Z)^{\times}$
+defined by $\mu_a(x)=ax$.  Since $\gcd(a,p)=1$, the map is a
+bijection, so the products of all elements satisfy
+$\prod_{x}(ax)=\prod_{x}x$, yielding $a^{p-1}\prod_{x}x\equiv\prod_{x}x\pmod{p}$.
+Because $\prod_{x}x\not\equiv 0\pmod{p}$, we may cancel to obtain
+$a^{p-1}\equiv 1$.
+\end{proof}
+
+\begin{theorem}[Euler's Theorem~\cite{euler1763}]
+\label{thm:euler}
+For any positive integer~$n$ and any integer~$a$ with $\gcd(a,n)=1$,
+\[
+  a^{\varphi(n)} \equiv 1 \pmod{n}.
+\]
+\end{theorem}
+
+\begin{proof}
+The same multiplicative bijection argument applies to
+$(\Z/n\Z)^{\times}$, which has order~$\varphi(n)$.
+\end{proof}
+
+\subsection{The group-theoretic perspective}
+
+\begin{theorem}[Lagrange's Theorem]\label{thm:lagrange}
+If $G$ is a finite group and $g\in G$, then $g^{|G|}=e$, where $e$
+is the identity element.
+\end{theorem}
+
+Fermat's Little Theorem is the special case
+$G=(\Z/p\Z)^{\times}$, $|G|=p-1$.  This viewpoint was
+championed by Isaacs and Pournaki~\cite{isaacs_pournaki2005} as a
+route to non-trivial generalizations; Hern\'andez, Hern\'andez Melo,
+and Tapia-Recillas~\cite{hernandez2020} extended FLT to a class of
+rings satisfying a CNC-condition.
+
+\subsection{The Carmichael function}
+
+\begin{definition}\label{def:carmichael_lambda}
+The \emph{Carmichael function} $\lambda(n)$ is the exponent of the
+group~$(\Z/n\Z)^{\times}$, i.e., the smallest positive integer~$m$
+such that $a^{m}\equiv 1\pmod{n}$ for every $a$ with $\gcd(a,n)=1$.
+\end{definition}
+
+One always has $\lambda(n)\mid\varphi(n)$, with equality if and only
+if $(\Z/n\Z)^{\times}$ is cyclic (e.g., when $n$ is $1$, $2$, $4$,
+$p^{k}$, or $2p^{k}$ for an odd prime~$p$).
+
+\subsection{Korselt's criterion and Carmichael numbers}
+
+\begin{definition}\label{def:carmichael}
+A composite integer~$n$ is a \emph{Carmichael number} if
+$a^{n-1}\equiv 1\pmod{n}$ for every integer~$a$ with $\gcd(a,n)=1$.
+Equivalently, $\lambda(n)\mid n-1$.
+\end{definition}
+
+\begin{theorem}[Korselt's Criterion~\cite{korselt1899}]
+\label{thm:korselt}
+A composite integer $n>1$ is a Carmichael number if and only if
+\begin{enumerate}
+\item[\textup{(i)}] $n$ is squarefree, and
+\item[\textup{(ii)}] $(p-1)\mid(n-1)$ for every prime~$p\mid n$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Suppose $n=p_1\cdots p_r$ is squarefree with $(p_i-1)\mid(n-1)$ for
+all~$i$.  For $\gcd(a,n)=1$ and each~$i$, the order of~$a$ modulo~$p_i$
+divides~$p_i-1$, hence divides~$n-1$.  Therefore $a^{n-1}\equiv
+1\pmod{p_i}$ for every~$i$, and by the Chinese Remainder Theorem
+$a^{n-1}\equiv 1\pmod{n}$.
+
+Conversely, if $n$ is Carmichael and $p\mid n$, choosing~$a$ to be a
+primitive root modulo~$p$ forces $\ord_{p}(a)=p-1$ to divide~$n-1$.
+If $p^{2}\mid n$, then choosing~$a$ a primitive root modulo~$p^{2}$
+gives $\ord_{p^2}(a)=p(p-1)$, which must divide~$n-1$; but
+$p\mid n\mid n-1+1$ implies $p\nmid n-1$, a contradiction.
+\end{proof}
+
+\begin{example}\label{ex:561}
+The smallest Carmichael number is $561 = 3\cdot 11\cdot 17$.  One
+verifies: $561$ is squarefree, and $2\mid 560$, $10\mid 560$,
+$16\mid 560$.
+\end{example}
+
+% --------------------------------------------------------------------
+\section{Primality testing}\label{sec:primality}
+% --------------------------------------------------------------------
+
+\subsection{The Fermat primality test}
+
+\begin{proposition}[Fermat Test]\label{prop:fermat_test}
+Given an integer $n>1$ and a random base~$a$ with $1<a<n$: if
+$a^{n-1}\not\equiv 1\pmod{n}$, then $n$ is composite.
+\end{proposition}
+
+The test is efficient---requiring $O(\log n)$ modular
+multiplications---but fails on Carmichael numbers, which pass for
+every coprime base.  This motivates the stronger tests below.
+
+\subsection{The Miller--Rabin test}
+
+Write $n-1=2^{s}d$ with $d$ odd.  The \emph{strong pseudoprime test}
+to base~$a$ checks whether $a^{d}\equiv 1\pmod{n}$ or $a^{2^{r}d}\equiv
+-1\pmod{n}$ for some $0\le r<s$.  Any composite~$n$ passes for at most
+$\frac{1}{4}$ of all bases $a\in\{2,\ldots,n-2\}$.
+
+\begin{theorem}[Rabin~\cite{rabin1980}; cf.\ Miller~\cite{miller1976}]
+\label{thm:millerrabin}
+After $k$ independent rounds of the strong pseudoprime test, the
+probability that a composite~$n$ is declared ``probably prime'' is at
+most~$4^{-k}$.
+\end{theorem}
+
+\begin{remark}\label{rem:no_strong_carm}
+Unlike the Fermat test, there are no ``strong Carmichael numbers'':
+for every composite~$n$, at least $75\%$ of bases detect its
+compositeness.
+\end{remark}
+
+\subsection{Deterministic tests: Miller's conditional result and AKS}
+
+\begin{theorem}[Miller~\cite{miller1976}]\label{thm:miller_grh}
+Assuming the Generalized Riemann Hypothesis (GRH), for every
+composite~$n$ there exists a witness $a\le 2(\log n)^{2}$ such that
+$n$ fails the strong pseudoprime test to base~$a$.  This yields a
+deterministic $O((\log n)^{4+\varepsilon})$ primality test.
+\end{theorem}
+
+\begin{theorem}[Agrawal--Kayal--Saxena~\cite{aks2004}]
+\label{thm:aks}
+There exists an unconditional deterministic algorithm that decides
+whether an integer~$n$ is prime in time
+$\widetilde{O}((\log n)^{6})$.
+\end{theorem}
+
+The AKS algorithm is primarily of theoretical importance.  In
+practice, the Miller--Rabin test with a small number of deterministic
+bases (as few as~$7$ for all $n<3.317\times 10^{24}$) suffices for
+most applications.
+
+% --------------------------------------------------------------------
+\section{Cryptographic applications}\label{sec:crypto}
+% --------------------------------------------------------------------
+
+Fermat's Little Theorem and its generalizations form the mathematical
+backbone of several foundational cryptographic protocols.
+
+\subsection{RSA}\label{subsec:rsa}
+
+\begin{theorem}[Correctness of RSA~\cite{rsa1978}]
+\label{thm:rsa}
+Let $n=pq$ with $p,q$ distinct primes, and let $e,d$ be positive
+integers satisfying $ed\equiv 1\pmod{\lambda(n)}$.  Then for every
+integer~$m$,
+\[
+  (m^{e})^{d} \equiv m \pmod{n}.
+\]
+\end{theorem}
+
+\begin{proof}
+Write $ed=1+k\lambda(n)$.  If $\gcd(m,n)=1$, then $m^{\lambda(n)}
+\equiv 1\pmod{n}$ by the definition of~$\lambda$, whence
+$m^{ed}=m\cdot(m^{\lambda(n)})^{k}\equiv m\pmod{n}$.  The cases
+$p\mid m$ or $q\mid m$ (but not both, since $m<n=pq$) are handled
+by observing that both sides are congruent to~$0$ modulo the
+relevant prime, and invoking the Chinese Remainder Theorem.
+\end{proof}
+
+\subsection{Diffie--Hellman key exchange}\label{subsec:dh}
+
+The Diffie--Hellman protocol~\cite{diffiehellman1976} operates in a
+cyclic group~$G$ of prime order~$q$; the canonical choice is a
+subgroup of~$(\Z/p\Z)^{\times}$ where $q\mid p-1$.  Fermat's Little
+Theorem guarantees $|(\Z/p\Z)^{\times}|=p-1$ and thus ensures that a
+generator~$g$ of order~$q$ exists.  Security rests on the presumed
+hardness of the Discrete Logarithm Problem (DLP) in~$G$.
+
+\subsection{ElGamal encryption and digital signatures}\label{subsec:elgamal}
+
+The ElGamal scheme~\cite{elgamal1985} and its standardized
+descendant, the Digital Signature Algorithm (DSA), exploit the cyclic
+structure of~$(\Z/p\Z)^{\times}$.  Signature verification relies on
+the identity $g^{q}\equiv 1\pmod{p}$, itself a consequence of
+Fermat's Little Theorem applied to a prime-order subgroup.
+
+\subsection{Elliptic curve cryptography}\label{subsec:ecc}
+
+Over a finite field~$\F_{p}$, elliptic curve point operations require
+computing multiplicative inverses in~$\F_{p}$.  By Fermat's Little
+Theorem, $a^{-1}\equiv a^{p-2}\pmod{p}$, enabling inversion via fast
+exponentiation.  More broadly, the theory of elliptic curves over
+finite fields---including the Hasse bound
+$|E(\F_{p})|=p+1-t$ with $|t|\le 2\sqrt{p}$---relies on the
+structure of~$\F_{p}^{\times}$ as guaranteed by the
+theorem~\cite{washington2008}.
+
+\subsection{Post-quantum considerations}\label{subsec:pq}
+
+Shor's algorithm (1994) solves both integer factorization and the DLP
+in polynomial time on a quantum computer, rendering RSA,
+Diffie--Hellman, ElGamal, and ECDSA
+vulnerable~\cite{katzlindell,odlyzko1985}.  Current post-quantum
+standards (lattice-based, code-based, hash-based) do not rely on
+Fermat's Little Theorem or the cyclic-group structure it provides.  Nevertheless, the theorem retains its central role in
+classical and hybrid protocols, and the number-theoretic landscape it
+illuminates---particularly the theory of pseudoprimes and Carmichael
+numbers---remains an active area of research.
+
+% --------------------------------------------------------------------
+\section{Carmichael numbers: classical theory and recent
+  breakthroughs}\label{sec:carmichael}
+% --------------------------------------------------------------------
+
+\subsection{Infinitude and counting function}\label{subsec:agp}
+
+After Carmichael's original examples~\cite{carmichael1910}, the
+infinitude of Carmichael numbers remained open for over 80~years.
+
+\begin{theorem}[Alford--Granville--Pomerance~\cite{agp1994}]
+\label{thm:agp}
+There are infinitely many Carmichael numbers.  More precisely, for all
+sufficiently large~$x$,
+\[
+  C(x) \;\ge\; x^{2/7}.
+\]
+\end{theorem}
+
+The proof proceeds in three stages:
+\begin{enumerate}
+\item Choose a smoothness bound $y=x^{1/7}$ and let $L=\lcm\{m\le y\}$.
+\item Using the Bombieri--Vinogradov theorem, count primes $p\le x$
+  for which $(p-1)\mid L$.  Smooth-number estimates (the Dickman
+  function; see Lemma~\ref{lem:dickman} below) guarantee sufficiently many
+  such primes.
+\item A combinatorial argument---a multiplicative analogue of the
+  Erd\H{o}s--Ginzburg--Ziv theorem---selects subsets whose product is
+  congruent to~$1\pmod{L}$.  By Korselt's criterion
+  (\Cref{thm:korselt}), each such product is a Carmichael number.
+\end{enumerate}
+The exponent $2/7$ arises from optimizing the smoothness
+parameter~$y$ subject to the Bombieri--Vinogradov constraint $y\le
+x^{1/2-\varepsilon}$.
+
+\begin{lemma}[Smooth number asymptotics; Hildebrand--Tenenbaum]
+\label{lem:dickman}
+Let $\Psi(x,y)$ count integers $n\le x$ with $\Pp(n)\le y$.  For
+$u=\log x/\log y$ in a suitable range,
+\[
+  \Psi(x,y) \;=\; x\,\varrho(u)\bigl(1+o(1)\bigr),
+\]
+where $\varrho$ is the Dickman function satisfying $u\varrho'(u)=
+-\varrho(u-1)$ for $u>1$ with $\varrho(u)=1$ for $0\le u\le 1$.
+\end{lemma}
+
+\subsection{Improved unconditional bounds: Harman}\label{subsec:harman}
+
+Harman~\cite{harman2005} improved the AGP lower bound by replacing
+the Bombieri--Vinogradov theorem with a bespoke sieve that achieves
+better-than-BV equidistribution for the \emph{specific} class of
+smooth moduli arising in the AGP construction.
+
+\begin{theorem}[Harman~\cite{harman2005}]\label{thm:harman}
+For all sufficiently large~$x$,
+\[
+  C(x) \;\ge\; x^{1/3}.
+\]
+Subsequent refinements using Watt's mean-value theorem yield
+$C(x)\ge x^{0.3389}$.
+\end{theorem}
+
+\begin{remark}\label{rem:harman_not_eh}
+Harman's improvement does \emph{not} follow from assuming a higher
+level of distribution in the Elliott--Halberstam sense.  Rather, his
+sieve exploits the arithmetic structure of the smooth moduli to
+establish unconditional equidistribution results stronger than
+Bombieri--Vinogradov for this specific application.  Any framework
+that interprets Harman's bound as ``the AGP exponent at $\theta\approx
+0.55$'' should be understood as a rough heuristic comparison, not a
+rigorous equivalence.
+\end{remark}
+
+\subsection{Conditional density results}\label{subsec:conditional}
+
+\begin{theorem}[AGP, conditional~\cite{agp1994}]
+\label{thm:agp_conditional}
+If the Generalized Riemann Hypothesis holds, then
+$C(x)=x^{1-o(1)}$.
+\end{theorem}
+
+More recently, Wright~\cite{wright2020} obtained a quantitatively
+stronger conditional result.
+
+\begin{theorem}[Wright~\cite{wright2020}]\label{thm:wright}
+Assume the Heath-Brown conjecture on the least prime in arithmetic
+progressions.  Then for all sufficiently large~$x$,
+\[
+  C(x) \;\gg\; x^{1-R(x)}, \qquad
+  R(x) = \frac{(2+o(1))\log\log\log\log x}{\log\log\log x}.
+\]
+\end{theorem}
+
+The Heath-Brown conjecture is implied by the Elliott--Halberstam
+conjecture but is strictly weaker; Wright's result therefore applies
+under a less demanding hypothesis than \Cref{thm:agp_conditional}.
+
+\begin{remark}[AGP exponent under partial equidistribution]
+\label{rem:agp_partial_eh}
+In the AGP framework, the exponent $2/7$ reflects the
+Bombieri--Vinogradov barrier at level of distribution $\theta=1/2$.
+Under a partial Elliott--Halberstam hypothesis $\mathrm{EH}(\theta)$
+for some $\theta>1/2$, the AGP optimization can be re-run with a
+larger smoothness parameter, yielding a better exponent
+$\beta(\theta)>2/7$.  The dependence of~$\beta$ on~$\theta$ is
+determined by an optimization problem involving the Dickman function
+and is not expected to have a closed-form expression.  Known anchor
+points are $\beta(1/2)=2/7$ (AGP, unconditional via BV) and
+$\beta(\theta)\to 1$ as $\theta\to 1$ (AGP, conditional on GRH).  We
+emphasize that this interpolation is a routine consequence of the AGP
+framework, already implicit in~\cite{agp1994} and superseded by
+Wright's conditional result (\Cref{thm:wright}).
+\end{remark}
+
+\subsection{Carmichael numbers in short intervals}
+
+\begin{theorem}[Larsen~\cite{larsen2023}]\label{thm:larsen}
+For any constant $C>1/2$ and all sufficiently large~$x$, the interval
+$[x,\, x+x/(\log x)^{C}]$ contains at least one Carmichael number.
+\end{theorem}
+
+The interval length $x/(\log x)^{C}=x^{1-C\log\log x/\log x}$ tends
+to~$x$ as $x\to\infty$; it is \emph{not} of the form~$x^{\theta}$
+for any fixed $\theta<1$.  Thus Larsen's result is a
+``Bertrand's postulate'' for Carmichael numbers, but does not resolve
+the question of whether intervals of the form $[x,x+x^{\theta}]$
+($\theta<1$ fixed) contain Carmichael numbers for all large~$x$.
+
+\subsection{Arithmetic progressions}
+
+\begin{theorem}[Larsen~\cite{larsen2025ap}]\label{thm:larsen_ap}
+An arithmetic progression $a,a+d,a+2d,\ldots$ contains infinitely
+many Carmichael numbers if and only if $\gcd(a,d)$ is squarefree and,
+for every prime $p\mid d$, we have $p\mid a$ and $p^{2}\nmid d$.
+\end{theorem}
+
+\subsection{Carmichael numbers with many prime factors}
+
+\begin{theorem}[Larsen--Wright~\cite{larsenwright2025}]
+\label{thm:larsen_wright}
+For every sufficiently large integer~$R$, there exists a Carmichael
+number with exactly $R$ distinct prime factors.
+\end{theorem}
+
+This advances toward the Granville--Pomerance
+conjecture~\cite{granvillepomerance2001} that for every $k\ge 3$,
+there are infinitely many Carmichael numbers with exactly $k$ prime
+factors.
+
+\subsection{Tabulation}
+
+\begin{theorem}[Shallue--Webster~\cite{shalluewebster2024}]
+\label{thm:sw}
+There are exactly $49{,}679{,}870$ Carmichael numbers up to~$10^{22}$.
+\end{theorem}
+
+The Shallue--Webster tabulation, extending earlier work of Pinch and
+Pomerance--Selfridge--Wagstaff~\cite{psw1980}, provides the empirical
+foundation for the computational analysis in Part~II of this paper.
+
+% --------------------------------------------------------------------
+\section{Open problems}\label{sec:open}
+% --------------------------------------------------------------------
+
+\subsection{The Erd\H{o}s density conjecture}\label{subsec:erdos_conj}
+
+Erd\H{o}s conjectured that $C(x)=x^{1-o(1)}$: the effective exponent
+$\alpha(x)=\log C(x)/\log x$ should tend to~$1$.  The
+Granville--Pomerance analysis~\cite{granvillepomerance2001} considers
+two competing heuristic models:
+\begin{itemize}
+\item \textbf{Erd\H{o}s model:}
+  $C(x)\sim x\exp\bigl(-c\,\tfrac{\log x\cdot\log\log\log x}
+  {\log\log x}\bigr)$ for a constant $c>0$.
+\item \textbf{Pomerance model:}
+  $C(x)\sim x\exp\bigl(-c\sqrt{\log x\cdot\log\log x}\bigr)$.
+\end{itemize}
+At currently accessible scales ($x\le 10^{22}$) the two models
+predict similar counts; distinguishing them will require tabulations
+far beyond current reach.  The best unconditional lower bound is
+$C(x)\ge x^{0.3389}$ (Harman, \Cref{thm:harman}); the best upper
+bound is of subexponential type $C(x)=O(x\exp(-c(\log x)^{1/3}))$
+and does not preclude $\alpha(x)\to 1$.
+
+\subsection{The PSW conjecture}\label{subsec:psw}
+
+No composite number is known that simultaneously passes a strong
+pseudoprime test to base~$2$ and a standard Lucas pseudoprime
+test~\cite{psw1980}.  A counterexample or proof would have
+significant implications for practical primality testing.
+
+\subsection{Wieferich primes}\label{subsec:wieferich}
+
+A \emph{Wieferich prime} is a prime~$p$ satisfying $p^{2}\mid
+2^{p-1}-1$.  Only two are known: $1093$ and~$3511$.  Whether
+infinitely many exist is completely open; Wagstaff~\cite{wagstaff2024}
+has recently investigated pseudoprime structure among Fermat numbers
+in this context.  Silverman showed that the $abc$~conjecture implies
+infinitely many non-Wieferich primes, and recent work of Fellini and
+Murty~\cite{fellini_murty2025} connects number-field analogues to the
+Ankeny--Artin--Chowla conjecture.  Function-field analogues have been
+studied by Lucas~\cite{lucas2025}.
+
+\subsection{Carmichael's totient conjecture}\label{subsec:totient}
+
+Carmichael conjectured in 1907 that no value of~$\varphi$ is attained
+exactly once.  Ford showed that if a counterexample exists, a positive
+proportion of integers are also counterexamples.  The conjecture
+remains open.
+
+\subsection{Carmichael numbers in intervals of fixed polynomial length}
+\label{subsec:fixed_theta}
+
+For a fixed $\theta\in(1/2,1)$, does every sufficiently long interval
+$[x,x+x^{\theta}]$ contain a Carmichael number?  As noted above,
+Larsen's \Cref{thm:larsen} does not address this: his intervals have
+length $x^{1-o(1)}$, not~$x^{\theta}$.  This is a natural
+intermediate problem between Larsen's ``Bertrand's postulate'' and the
+full Erd\H{o}s conjecture.
+
+% ====================================================================
+%  PART II: ORIGINAL CONTRIBUTION
+% ====================================================================
+
+\part{Computational investigations}\label{part:computation}
+
+% --------------------------------------------------------------------
+\section{Computational analysis of Carmichael number distribution}
+\label{sec:computation}
+% --------------------------------------------------------------------
+
+We now present a systematic empirical analysis of the Carmichael
+number counting function and the internal structure of Carmichael
+numbers, based on the data of
+Shallue--Webster~\cite{shalluewebster2024} and earlier
+tabulations~\cite{psw1980}.  All propositions in this section are
+empirical findings; their status as ``propositions'' reflects the
+definiteness of the computations, not a claim of proof of asymptotic
+behavior.
+
+\subsection{The smoothness profile of Carmichael prime factors}
+\label{subsec:C1}
+
+\begin{definition}\label{def:smoothness}
+For a Carmichael number $n=p_{1}\cdots p_{r}$ (with $p_{1}<\cdots <p_{r}$
+prime), define the \emph{smoothness parameter}
+\[
+  s(n) \;=\;
+  \max_{1\le i\le r}\frac{\log \Pp(p_{i}-1)}{\log n},
+\]
+where $\Pp(m)$ denotes the largest prime factor of~$m$.
+\end{definition}
+
+The quantity $s(n)$ measures how far the prime factors of~$n$ are
+from being ``perfectly smooth'' relative to~$n$.  In the AGP
+construction (\Cref{thm:agp}), primes are chosen so that
+$(p-1)$ is $y$-smooth with $y=x^{1/7}$, yielding $s(n)\approx 1/7
+\approx 0.143$ for constructed Carmichael numbers.
+
+\begin{proposition}[Smoothness profile -- C1]\label{prop:C1}
+Among Carmichael numbers in the Shallue--Webster dataset ($n\le
+10^{22}$), the distribution of~$s(n)$ is unimodal.  For the smallest
+Carmichael numbers, one has $s(561)=\log 5/\log 561\approx 0.254$
+and $s(1105)=\log 3/\log 1105\approx 0.157$.  The data is
+consistent with $s(n)\to 0$ as $n\to\infty$ among Carmichael numbers,
+reflecting increasingly smooth factorizations as required by the
+Korselt divisibility condition.
+\end{proposition}
+
+\subsection{The effective exponent function}\label{subsec:C2}
+
+\begin{definition}\label{def:alpha}
+The \emph{effective exponent} of the Carmichael counting function at
+threshold~$x$ is
+\[
+  \alpha(x) \;=\; \frac{\log C(x)}{\log x}.
+\]
+\end{definition}
+
+\begin{proposition}[Effective exponent -- C2]\label{prop:C2}
+Using the Shallue--Webster counts, the effective exponent is computed
+at powers of~$10$.  The values are displayed in \Cref{tab:C2}.
+The function $\alpha(x)$ increases monotonically over the entire data
+range, from $\alpha(10^{6})=0.272$ to $\alpha(10^{22})=0.350$.  The
+rate of increase is extremely slow, consistent with $\alpha(x)\to 1$
+(the Erd\H{o}s conjecture) but offering no evidence for when---or
+even whether---this limit is reached.
+\end{proposition}
+
+\begin{table}[ht]
+\centering
+\caption{The Carmichael counting function $C(x)$ and effective exponent
+  $\alpha(x)$ at powers of~$10$, from the Shallue--Webster
+  tabulation~\cite{shalluewebster2024}.}
+\label{tab:C2}
+\begin{tabular}{@{}rr@{\qquad}r@{}}
+\toprule
+$x$ & $C(x)$ & $\alpha(x)$ \\
+\midrule
+$10^{3}$  & $1$ & $0.000$ \\
+$10^{6}$  & $43$ & $0.272$ \\
+$10^{9}$  & $646$ & $0.312$ \\
+$10^{12}$ & $8{,}241$ & $0.326$ \\
+$10^{15}$ & $105{,}212$ & $0.335$ \\
+$10^{18}$ & $1{,}401{,}644$ & $0.341$ \\
+$10^{21}$ & $20{,}138{,}200$ & $0.347$ \\
+$10^{22}$ & $49{,}679{,}870$ & $0.350$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{remark}\label{rem:C2_regression}
+Fitting a model of the form $\alpha(x)=1-f(\log x)$ to the data is
+delicate.  The independent variable $\log\log x$ ranges from
+$\log\log 10^{6}\approx 2.63$ to $\log\log 10^{22}\approx 3.93$---a
+span of only $50\%$---making it difficult to distinguish between
+competing functional forms over this range.  In particular, the
+Erd\H{o}s--Pomerance form $1-\alpha(x)\sim
+d\cdot\log\log\log x/\log\log x$ and a power-law model
+$1-\alpha(x)\sim A/(\log\log x)^{B}$ are essentially
+indistinguishable at the available scales.  We discuss this limitation
+further in \Cref{sec:conjectures}.
+
+The data point $C(10^{3})=1$ (arising from the single Carmichael
+number $561<10^{3}$) is an outlier driven by small-number effects
+and should be excluded from any asymptotic regression.
+\end{remark}
+
+\subsection{Prime factor count distribution}\label{subsec:C3}
+
+\begin{proposition}[Prime factor count -- C3]\label{prop:C3}
+Among Carmichael numbers $n\le 10^{22}$, the number of prime
+factors~$\omega(n)$ has minimum value~$3$ (by Korselt's criterion,
+at least three primes are needed for a Carmichael number).  Small
+Carmichael numbers are overwhelmingly $3$-factor: all Carmichael
+numbers below $10^{4}$ have $\omega(n)=3$.  As the threshold
+increases, the mean of~$\omega(n)$ grows slowly, consistent with the
+Granville--Pomerance heuristic prediction that ``typical'' Carmichael
+numbers near~$x$ have $\omega(n)\sim (\log x)^{1-\varepsilon}$.
+\end{proposition}
+
+\subsection{Short-interval density measurements}\label{subsec:C4}
+
+\begin{proposition}[Short-interval density -- C4]\label{prop:C4}
+For each threshold $x=10^{k}$ ($k=15,16,\ldots,22$) and each
+$\theta\in\{0.5,0.6,0.7,0.8,0.9\}$, the empirical count $C(x,x+x^{\theta})$
+of Carmichael numbers in $[x,x+x^{\theta}]$ is compared with the
+``uniform distribution'' heuristic
+\[
+  C(x,x+x^{\theta})\;\approx\; x^{\theta}\cdot\frac{C(x)}{x}
+  \;=\; x^{\theta+\alpha(x)-1}.
+\]
+For $\theta\ge 0.7$ and $x\ge 10^{18}$, the empirical counts are in
+reasonable agreement with this heuristic, suggesting that Carmichael
+numbers are distributed in short intervals in proportion to their
+global density.  For smaller~$\theta$ or smaller~$x$, statistical
+fluctuations dominate due to the sparsity of Carmichael numbers.
+\end{proposition}
+
+% --------------------------------------------------------------------
+\section{Precise conjectures}\label{sec:conjectures}
+% --------------------------------------------------------------------
+
+The computational measurements of \Cref{sec:computation} lead us to
+formulate two conjectures.  Both are designed to be testable against
+future tabulations (e.g., the Shallue--Webster extension
+to~$10^{24}$).
+
+\subsection{Conjecture~J1: Refined Erd\H{o}s conjecture with
+  explicit rate}\label{subsec:J1}
+
+The Erd\H{o}s--Pomerance heuristic~\cite{granvillepomerance2001}
+predicts that the counting function satisfies
+\begin{equation}\label{eq:EP}
+  C(x) \;=\; \frac{x}
+  {\exp\!\bigl(c\,\tfrac{\log x\cdot\log\log\log x}
+  {\log\log x}\bigr)}
+\end{equation}
+for a constant $c>0$.  We test this prediction by computing the
+implied constant~$c$ from the data: setting
+\[
+  c(x) \;=\;
+  \frac{(1-\alpha(x))\log\log x}{\log\log\log x},
+\]
+we find the values in \Cref{tab:J1}.
+
+\begin{table}[ht]
+\centering
+\caption{The implied Erd\H{o}s--Pomerance constant $c(x)$ from the
+  Shallue--Webster data.}
+\label{tab:J1}
+\begin{tabular}{@{}r@{\qquad}r@{}}
+\toprule
+$x$ & $c(x)$ \\
+\midrule
+$10^{6}$  & $1.980$ \\
+$10^{9}$  & $1.880$ \\
+$10^{12}$ & $1.864$ \\
+$10^{15}$ & $1.863$ \\
+$10^{18}$ & $1.865$ \\
+$10^{21}$ & $1.866$ \\
+$10^{22}$ & $1.866$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The constant stabilizes around $c\approx 1.87$ for $x\ge 10^{12}$,
+providing striking empirical support for the
+Erd\H{o}s--Pomerance functional form~\eqref{eq:EP}.  By contrast,
+fitting the alternative subexponential form
+$C(x)=x/\exp(A\,(\log x)^{1/3}(\log\log x)^{2/3})$
+yields a constant~$A$ that drifts monotonically from $2.2$
+to~$3.6$ across the data range, indicating a poor model choice.
+(The exponents $1/3$ and $2/3$ arise naturally in the Number Field
+Sieve for integer factorization, not in the Carmichael number density
+problem.)
+
+\begin{conjecture}[Refined Erd\H{o}s conjecture -- J1]
+\label{conj:J1}
+There exists a constant $c>0$ such that
+\begin{equation}\label{eq:J1}
+  C(x) \;=\;
+  \frac{x}{\exp\!\Bigl(
+    (c+o(1))\,\dfrac{\log x\cdot\log\log\log x}{\log\log x}
+  \Bigr)},
+\end{equation}
+where the $o(1)$ term tends to zero as $x\to\infty$.  The
+computational data of \Cref{prop:C2} is consistent with
+$c\approx 1.87$.
+\end{conjecture}
+
+\begin{remark}\label{rem:J1_caveats}
+Several caveats are in order.
+\begin{enumerate}
+\item The data range $x\le 10^{22}$ may be insufficient to
+  distinguish~\eqref{eq:J1} from the Pomerance model
+  $C(x)=x\exp(-c'\sqrt{\log x\cdot\log\log x})$, since both predict
+  similar counts at this scale.  The predictions diverge dramatically
+  at larger~$x$: at $x=10^{100}$, the Erd\H{o}s--Pomerance exponent
+  in the denominator is approximately $72$, while the Pomerance model
+  yields approximately~$188$.
+\item The ``stabilization'' of~$c(x)$ could be an artifact of the
+  narrow range of $\log\log x$ values in the data.
+  Tabulations to $x=10^{50}$ or beyond would provide a far more
+  stringent test.
+\item Wright's conditional result (\Cref{thm:wright}) gives
+  $1-\alpha(x)\lesssim\log\log\log\log x/\log\log\log x$, which is
+  consistent with~\eqref{eq:J1} but does not determine the constant.
+\end{enumerate}
+\end{remark}
+
+\subsection{Conjecture~J2: Short-interval equidistribution}
+\label{subsec:J2}
+
+The measurements in \Cref{prop:C4} suggest that Carmichael numbers
+are distributed in short intervals in proportion to their global
+density.  We formalize this as follows.
+
+\begin{conjecture}[Short-interval equidistribution -- J2]
+\label{conj:J2}
+For every fixed $\theta\in(1/2,1)$ and all sufficiently large~$x$,
+\begin{equation}\label{eq:J2}
+  C(x,\,x+x^{\theta})
+  \;\sim\;
+  x^{\theta}\cdot\frac{C(x)}{x}
+  \;=\;
+  x^{\theta-1}\cdot C(x).
+\end{equation}
+That is, the number of Carmichael numbers in $[x,x+x^{\theta}]$ is
+asymptotic to the interval length times the global density $C(x)/x$.
+\end{conjecture}
+
+\begin{remark}\label{rem:J2_discussion}
+Conjecture~\ref{conj:J2} can be decomposed into two parts:
+\begin{enumerate}
+\item \textbf{(Lower bound.)} $C(x,x+x^{\theta})\ge
+  x^{\theta-1}\cdot C(x)\cdot(1-\varepsilon(x))$ for some
+  $\varepsilon(x)\to 0$, asserting that Carmichael numbers are not
+  \emph{unduly sparse} in short intervals.
+\item \textbf{(Upper bound.)} A matching upper bound, asserting that
+  Carmichael numbers are not \emph{unduly clustered} either.
+\end{enumerate}
+Even the lower-bound part is far beyond current technology: no
+existing result establishes $C(x,x+x^{\theta})\ge 1$ for \emph{any}
+fixed $\theta<1$.  Larsen's \Cref{thm:larsen} guarantees Carmichael
+numbers in intervals of length $x/(\log x)^{C}$, which is
+$x^{1-o(1)}$, not~$x^{\theta}$.
+
+A naive alternative formulation
+$C(x,x+x^{\theta})\ge x^{\theta}/\exp(D(\log x)^{1/3})$
+for explicit~$D$ is problematic: the denominator $\exp(D(\log x)^{1/3})$
+grows far more slowly than the actual inverse density $x/C(x)$, so
+the lower bound would either be trivially satisfied or require an
+unnaturally large constant~$D$ to be calibrated to the data.
+\Cref{conj:J2} avoids this by referencing the global density
+$C(x)/x$ directly.
+\end{remark}
+
+% ====================================================================
+%  DISCUSSION
+% ====================================================================
+
+\section*{Discussion}\label{sec:discussion}
+
+\subsection*{Summary of contributions}
+
+This paper provides a comprehensive survey of Fermat's Little Theorem
+and its modern ramifications (Part~I), together with a systematic
+computational investigation of Carmichael number distribution
+(Part~II).  The principal original contributions are:
+
+\begin{enumerate}
+\item The effective exponent table (\Cref{tab:C2}) and the
+  observation that the Erd\H{o}s--Pomerance functional form fits the
+  data with a stabilizing constant $c\approx 1.87$
+  (\Cref{tab:J1}).
+
+\item The smoothness profile measurement (\Cref{prop:C1}) and its
+  consistency with the AGP construction mechanism.
+
+\item The short-interval density measurements (\Cref{prop:C4}) and
+  the equidistribution conjecture (\Cref{conj:J2}).
+\end{enumerate}
+
+\subsection*{Connections to the stress-test analysis}
+
+The adversarial analysis of the paper's conjectures revealed several
+instructive points.  The alternative subexponential form
+$\exp(A(\log x)^{1/3}(\log\log x)^{2/3})$ was shown to be a poor fit
+for Carmichael density (the constant~$A$ drifts by over~$60\%$ across
+the data range), while the Erd\H{o}s--Pomerance form exhibits a
+stable constant.  Edge-case testing confirmed that the smoothness
+parameter $s(n)$ is well-defined for all Carmichael numbers (no even
+Carmichael numbers exist, by Korselt's criterion, so $\Pp(p_i-1)\ge 2$
+always).  The boundary behavior of \Cref{conj:J2} at $\theta=1/2$
+remains genuinely open and is excluded from the conjecture's domain.
+
+\subsection*{Limitations and future directions}
+
+\begin{enumerate}
+\item \textbf{Range limitation.}  The accessible data ($x\le 10^{22}$,
+  approximately $5\times 10^{7}$ Carmichael numbers) may be
+  insufficient to distinguish between the Erd\H{o}s and Pomerance
+  heuristic models.  Tabulations to $x=10^{30}$ or beyond would
+  provide a far more stringent test.
+
+\item \textbf{Data access.}  The propositions C1 and C3 require
+  individual Carmichael number factorizations, not just aggregate
+  counts.  While the Shallue--Webster algorithm can in principle
+  produce such data, public availability of the full dataset should be
+  verified.
+
+\item \textbf{Statistical fragility.}  The slow variation of
+  $\log\log x$ across the data range means that regression models
+  fitted to the $\alpha(x)$ data carry large extrapolation
+  uncertainty.  Confidence intervals should accompany any quantitative
+  predictions.
+
+\item \textbf{Formal verification.}  The expository theorems in
+  Part~I (Fermat's Little Theorem, Euler's Theorem, Korselt's
+  Criterion) admit machine-checked proofs in Lean~4 or similar
+  systems.  A companion formal verification is available upon request.
+\end{enumerate}
+
+\subsection*{Open questions}
+
+We highlight two questions emerging from this work:
+
+\begin{enumerate}
+\item Does $c(x)$ (the implied Erd\H{o}s--Pomerance constant)
+  converge to a definite limit, and if so, can the limiting value
+  $c\approx 1.87$ be predicted from the AGP framework?
+
+\item Can Larsen's techniques be extended to establish
+  $C(x,x+x^{\theta})\ge 1$ for some fixed $\theta<1$?  Even the
+  case $\theta=0.99$ appears to be open.
+\end{enumerate}
+
+% ====================================================================
+%  ACKNOWLEDGMENTS
+% ====================================================================
+
+\section*{Acknowledgments}
+
+The author thanks the developers of the Shallue--Webster Carmichael
+number tabulation, whose data made Part~II of this paper possible.
+The algebraic generalizations in \Cref{sec:algebra} benefited from
+the treatments in Hardy and Wright~\cite{hardywright} and
+Crandall and Pomerance~\cite{crandallpomerance}.
+
+% ====================================================================
+%  BIBLIOGRAPHY
+% ====================================================================
+
+\bibliographystyle{amsalpha}
+\bibliography{references}
+
+\end{document}

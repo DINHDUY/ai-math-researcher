@@ -16,6 +16,13 @@ Five subagents collaborate in sequence, each handing off to the next:
 
 ## Usage
 
+Clone the repository:
+
+```bash
+git clone https://github.com/DINHDUY/ai-match-researcher.git
+cd ai-match-researcher
+```
+
 Invoke any subagent directly via Claude:
 
 ```bash

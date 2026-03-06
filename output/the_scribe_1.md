@@ -234,8 +234,9 @@ All seven original issues from Iteration 1 are genuinely resolved. The two new m
 ## Handoff Complete
 
 Output files:
-- `/Users/duy/repos/SDD/ai-math-researcher/output/paper.tex`
-- `/Users/duy/repos/SDD/ai-math-researcher/output/references.bib`
+- `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.tex`
+- `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.bib`
+- `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.pdf`
 - `/Users/duy/repos/SDD/ai-math-researcher/output/the_scribe_1.md`
 
 The manuscript is ready for review, compilation, or submission.

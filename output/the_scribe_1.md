@@ -150,11 +150,11 @@ Three files written to `/Users/duy/repos/SDD/ai-math-researcher/output/`:
 To compile the manuscript:
 
 ```bash
-cd /Users/duy/repos/SDD/ai-math-researcher/output
-pdflatex paper.tex
-bibtex paper
-pdflatex paper.tex
-pdflatex paper.tex
+cd output
+pdflatex fermat_carmichael.tex
+bibtex fermat_carmichael
+pdflatex fermat_carmichael.tex
+pdflatex fermat_carmichael.tex
 ```
 
 **Required Packages:** All standard in TeX Live and MiKTeX distributions

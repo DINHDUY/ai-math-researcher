@@ -9,10 +9,10 @@
 
 All input files from the Verified Bundle were read and analyzed:
 
-1. `/Users/duy/repos/SDD/ai-math-researcher/output/the_scout_1.md` - Complete literature review with 23 primary references, citations, and recent breakthroughs (2022-2025)
-2. `/Users/duy/repos/SDD/ai-math-researcher/output/the_architect_2.md` - Revised blueprint with Part I (expository survey) and Part II (computational contribution)
-3. `/Users/duy/repos/SDD/ai-math-researcher/output/the_verifier_2.md` - Verification report confirming all 7 original issues resolved, identifying functional form issue in conjectures
-4. `/Users/duy/repos/SDD/ai-math-researcher/output/the_red_teamer_2.md` - Stress test with verdict PASS WITH WARNINGS, detailed functional form analysis
+1. `<repo_root>/output/the_scout_1.md` - Complete literature review with 23 primary references, citations, and recent breakthroughs (2022-2025)
+2. `<repo_root>/output/the_architect_2.md` - Revised blueprint with Part I (expository survey) and Part II (computational contribution)
+3. `<repo_root>/output/the_verifier_2.md` - Verification report confirming all 7 original issues resolved, identifying functional form issue in conjectures
+4. `<repo_root>/output/the_red_teamer_2.md` - Stress test with verdict PASS WITH WARNINGS, detailed functional form analysis
 
 ---
 

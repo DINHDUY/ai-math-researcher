@@ -9,10 +9,10 @@
 
 All input files from the Verified Bundle were read and analyzed:
 
-1. `/Users/duy/repos/SDD/ai-math-researcher/output/the_scout_1.md` - Complete literature review with 23 primary references, citations, and recent breakthroughs (2022-2025)
-2. `/Users/duy/repos/SDD/ai-math-researcher/output/the_architect_2.md` - Revised blueprint with Part I (expository survey) and Part II (computational contribution)
-3. `/Users/duy/repos/SDD/ai-math-researcher/output/the_verifier_2.md` - Verification report confirming all 7 original issues resolved, identifying functional form issue in conjectures
-4. `/Users/duy/repos/SDD/ai-math-researcher/output/the_red_teamer_2.md` - Stress test with verdict PASS WITH WARNINGS, detailed functional form analysis
+1. `output/the_scout_1.md` - Complete literature review with 23 primary references, citations, and recent breakthroughs (2022-2025)
+2. `output/the_architect_2.md` - Revised blueprint with Part I (expository survey) and Part II (computational contribution)
+3. `output/the_verifier_2.md` - Verification report confirming all 7 original issues resolved, identifying functional form issue in conjectures
+4. `output/the_red_teamer_2.md` - Stress test with verdict PASS WITH WARNINGS, detailed functional form analysis
 
 ---
 
@@ -238,20 +238,22 @@ All 23 \cite commands match bibliography entries:
 
 ## Compilation Results
 
-The manuscript was compiled using the standard LaTeX sequence:
+The manuscript was compiled using the standard BibTeX/LaTeX sequence:
 
 ```bash
 cd output
-pdflatex fermat_carmichael.tex  # First pass (cross-refs unresolved)
-pdflatex fermat_carmichael.tex  # Second pass (resolve labels)
-pdflatex fermat_carmichael.tex  # Final pass (all resolved)
+pdflatex fermat_carmichael  # First pass (cross-refs unresolved)
+bibtex fermat_carmichael    # Process bibliography database
+pdflatex fermat_carmichael  # Second pass (resolve citations)
+pdflatex fermat_carmichael  # Final pass (all resolved)
 ```
 
-Note: BibTeX was not run because the document uses embedded `thebibliography` environment rather than external .bib file processing. This is an acceptable amsart convention for papers with moderate bibliography size.
+The document uses `\bibliographystyle{amsplain}` and `\bibliography{fermat_carmichael}` to reference the external `fermat_carmichael.bib` database.
 
 ### Compilation Summary
 
 - **Pass 1:** Generated .aux, .toc, .out files; cited references undefined
+- **BibTeX:** Processed `fermat_carmichael.bib`, generated `fermat_carmichael.bbl`
 - **Pass 2:** Resolved all cross-references; "Label(s) may have changed" warning
 - **Pass 3:** All references stable; no warnings except minor overfull hbox (cosmetic)
 
@@ -370,19 +372,19 @@ This refers to the formal verification work documented in `/Users/duy/repos/SDD/
 
 All deliverables written to the output directory:
 
-1. **Manuscript:** `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.tex`
+1. **Manuscript:** `output/fermat_carmichael.tex`
    - 545 lines of LaTeX source
    - Complete amsart document with proofs, tables, and bibliography
 
-2. **Bibliography:** `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.bib`
+2. **Bibliography:** `output/fermat_carmichael.bib`
    - 23 BibTeX entries
    - AMS citation style
 
-3. **PDF:** `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.pdf`
+3. **PDF:** `output/fermat_carmichael.pdf`
    - 12 pages, 307 KB
    - Compiled successfully with all cross-references resolved
 
-4. **This Report:** `/Users/duy/repos/SDD/ai-math-researcher/output/the_scribe_2.md`
+4. **This Report:** `output/the_scribe_2.md`
    - Complete documentation of process and decisions
 
 ---
@@ -417,4 +419,4 @@ The journal-ready LaTeX manuscript is complete and ready for submission. Key fea
 - `fermat_carmichael.pdf` (compiled PDF)
 - `the_scribe_2.md` (this report)
 
-All files are located in `/Users/duy/repos/SDD/ai-math-researcher/output/`.
+All files are located in `output/`.

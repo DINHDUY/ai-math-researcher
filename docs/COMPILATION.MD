@@ -14,11 +14,7 @@
   eval "$(/usr/libexec/path_helper)"
   sudo tlmgr update --self
   sudo tlmgr install amsmath amscls amsthm mathtools booktabs hyperref cleveref
-
-  Option C: Without Homebrew
-
-  Download the MacTeX installer directly from https://tug.org/mactex/mactex-download.html and run the .pkg.
-
+  
   ---
   Once installed, copy the output files to your Mac and compile:
 
@@ -28,5 +24,4 @@
   pdflatex fermat_survey
   pdflatex fermat_survey
 
-  Let me know once LaTeX is installed and I'll run the compilation (or do the syntax validation now while you
-  install).
+  

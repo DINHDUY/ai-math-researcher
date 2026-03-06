@@ -65,6 +65,20 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    - Verify the abstract is self-contained and within journal length limits
    - Add MSC (Mathematics Subject Classification) codes and keywords
 
+9. **Compile to PDF.** After writing `output/{{title}}.tex` and `output/{{title}}.bib`, run the standard LaTeX compilation sequence from the `output/` directory:
+
+   ```bash
+   cd output
+   pdflatex {{title}}
+   bibtex {{title}}
+   pdflatex {{title}}
+   pdflatex {{title}}
+   ```
+
+   - The double `pdflatex` pass after `bibtex` ensures cross-references, citations, and the table of contents are fully resolved.
+   - If `pdflatex` reports errors, diagnose and fix the `.tex` source, then re-run the full sequence.
+   - Confirm `output/{{title}}.pdf` exists and is non-empty after compilation.
+
 ## Output Format
 
 ### Input Sources
@@ -128,13 +142,14 @@ output/the_scribe_<N>.md
 Where `<N>` is an iterating integer starting at 1. Increment if prior files exist.
 
 Additionally, write the actual deliverables as separate files:
-- `output/paper.tex` -- the complete LaTeX source
-- `output/references.bib` -- the BibTeX bibliography
+- `output/{{title}}.tex` -- the complete LaTeX source
+- `output/{{title}}.bib` -- the BibTeX bibliography
+- `output/{{title}}.pdf` -- the compiled PDF produced by running the compilation sequence in step 9
 
 ## Handoff
 
 1. Write the output files as described above.
-2. Deliver the final `output/paper.tex`, `output/references.bib`, and (if a PDF compilation pipeline is available) `output/paper.pdf` to the **User**.
+2. Deliver the final `output/{{title}}.tex`, `output/{{title}}.bib`, and `output/{{title}}.pdf` to the **User**.
 3. Summarize what was produced and list all output files.
 
 ## Guidelines

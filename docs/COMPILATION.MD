@@ -19,9 +19,9 @@
   Once installed, copy the output files to your Mac and compile:
 
   cd /path/to/output
-  pdflatex fermat_survey
-  bibtex fermat_survey
-  pdflatex fermat_survey
-  pdflatex fermat_survey
+  pdflatex fermat_carmichael
+  bibtex fermat_carmichael
+  pdflatex fermat_carmichael
+  pdflatex fermat_carmichael
 
   

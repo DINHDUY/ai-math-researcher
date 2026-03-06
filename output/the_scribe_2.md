@@ -238,7 +238,7 @@ All 23 \cite commands match bibliography entries:
 
 ## Compilation Results
 
-The manuscript was compiled using the standard LaTeX sequence:
+The manuscript uses an inline `thebibliography` environment rather than an external `.bib` file, so the pdflatex-only sequence was used (no `bibtex` step required):
 
 ```bash
 cd output
@@ -246,8 +246,6 @@ pdflatex fermat_carmichael.tex  # First pass (cross-refs unresolved)
 pdflatex fermat_carmichael.tex  # Second pass (resolve labels)
 pdflatex fermat_carmichael.tex  # Final pass (all resolved)
 ```
-
-Note: BibTeX was not run because the document uses embedded `thebibliography` environment rather than external .bib file processing. This is an acceptable amsart convention for papers with moderate bibliography size.
 
 ### Compilation Summary
 

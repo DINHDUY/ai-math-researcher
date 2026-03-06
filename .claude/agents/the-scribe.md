@@ -65,7 +65,9 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    - Verify the abstract is self-contained and within journal length limits
    - Add MSC (Mathematics Subject Classification) codes and keywords
 
-9. **Compile to PDF.** After writing `output/{{title}}.tex` and `output/{{title}}.bib`, run the standard LaTeX compilation sequence from the `output/` directory:
+9. **Compile to PDF.** After writing `output/{{title}}.tex`, run the LaTeX compilation sequence from the `output/` directory. The sequence depends on whether a BibTeX-driven bibliography is used:
+
+   **If the manuscript uses `\bibliographystyle{...}` + `\bibliography{...}` (BibTeX-driven):**
 
    ```bash
    cd output
@@ -75,7 +77,27 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    pdflatex {{title}}
    ```
 
-   - The double `pdflatex` pass after `bibtex` ensures cross-references, citations, and the table of contents are fully resolved.
+   **If the manuscript uses an embedded `thebibliography` environment (no `.bib` file):**
+
+   ```bash
+   cd output
+   pdflatex {{title}}
+   pdflatex {{title}}
+   ```
+
+   To determine which sequence to use at runtime, check whether the `.aux` file contains a `\bibdata` line after the first `pdflatex` pass:
+
+   ```bash
+   cd output
+   pdflatex {{title}}
+   if grep -q '\\bibdata' {{title}}.aux; then
+     bibtex {{title}}
+     pdflatex {{title}}
+   fi
+   pdflatex {{title}}
+   ```
+
+   - The extra `pdflatex` pass after `bibtex` (when used) ensures cross-references, citations, and the table of contents are fully resolved.
    - If `pdflatex` reports errors, diagnose and fix the `.tex` source, then re-run the full sequence.
    - Confirm `output/{{title}}.pdf` exists and is non-empty after compilation.
 
@@ -116,7 +138,7 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 \end{document}
 ```
 
-### Bibliography File (.bib)
+### Bibliography File (.bib) *(only when using BibTeX-driven bibliography)*
 
 ```bibtex
 % All referenced entries
@@ -143,13 +165,13 @@ Where `<N>` is an iterating integer starting at 1. Increment if prior files exis
 
 Additionally, write the actual deliverables as separate files:
 - `output/{{title}}.tex` -- the complete LaTeX source
-- `output/{{title}}.bib` -- the BibTeX bibliography
+- `output/{{title}}.bib` -- the BibTeX bibliography *(only when using BibTeX-driven bibliography)*
 - `output/{{title}}.pdf` -- the compiled PDF produced by running the compilation sequence in step 9
 
 ## Handoff
 
 1. Write the output files as described above.
-2. Deliver the final `output/{{title}}.tex`, `output/{{title}}.bib`, and `output/{{title}}.pdf` to the **User**.
+2. Deliver the final `output/{{title}}.tex`, `output/{{title}}.pdf` (and `output/{{title}}.bib` if a BibTeX-driven bibliography was used) to the **User**.
 3. Summarize what was produced and list all output files.
 
 ## Guidelines

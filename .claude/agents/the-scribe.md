@@ -66,31 +66,19 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    - Verify the abstract is self-contained and within journal length limits
    - Add MSC (Mathematics Subject Classification) codes and keywords
 
-9. **Compile to PDF.** After writing `output/{{basename}}.tex` and (if using BibTeX) `output/{{basename}}.bib`, run the LaTeX compilation sequence from the `output/` directory.
-
-   Use `{{basename}}` as the filesystem-safe filename derived from the paper title (lowercase, hyphens instead of spaces, no special characters). For example, the title "Fermat's Little Theorem at 386" maps to the basename `fermats-little-theorem-at-386`.
-
-   **If the manuscript uses `\bibliography{}`** (BibTeX-driven references), run the full sequence:
+9. **Compile to PDF.** After writing `output/paper.tex` and `output/paper.bib`, run the standard LaTeX compilation sequence from the `output/` directory:
 
    ```bash
    cd output
-   pdflatex {{basename}}
-   bibtex {{basename}}
-   pdflatex {{basename}}
-   pdflatex {{basename}}
+   pdflatex paper
+   bibtex paper
+   pdflatex paper
+   pdflatex paper
    ```
 
-   **If the manuscript uses an embedded `thebibliography` environment** (no `\bibliography{}`), skip bibtex and run only:
-
-   ```bash
-   cd output
-   pdflatex {{basename}}
-   pdflatex {{basename}}
-   ```
-
-   - The extra `pdflatex` passes ensure cross-references and the table of contents are fully resolved.
-   - If `pdflatex` reports errors, diagnose and fix the `.tex` source, then re-run the sequence.
-   - Confirm `output/{{basename}}.pdf` exists and is non-empty after compilation.
+   - The double `pdflatex` pass after `bibtex` ensures cross-references, citations, and the table of contents are fully resolved.
+   - If `pdflatex` reports errors, diagnose and fix the `.tex` source, then re-run the full sequence.
+   - Confirm `output/paper.pdf` exists and is non-empty after compilation.
 
 ## Output Format
 
@@ -154,15 +142,15 @@ output/the_scribe_<N>.md
 
 Where `<N>` is an iterating integer starting at 1. Increment if prior files exist.
 
-Additionally, write the actual deliverables as separate files using `{{basename}}` (the filesystem-safe version of the title):
-- `output/{{basename}}.tex` -- the complete LaTeX source
-- `output/{{basename}}.bib` -- the BibTeX bibliography (if using BibTeX-driven references)
-- `output/{{basename}}.pdf` -- the compiled PDF produced by running the compilation sequence in step 9
+Additionally, write the actual deliverables as separate files:
+- `output/paper.tex` -- the complete LaTeX source
+- `output/paper.bib` -- the BibTeX bibliography
+- `output/paper.pdf` -- the compiled PDF produced by running the compilation sequence in step 9
 
 ## Handoff
 
 1. Write the output files as described above.
-2. Deliver the final `output/{{basename}}.tex`, `output/{{basename}}.bib` (if applicable), and `output/{{basename}}.pdf` to the **User**.
+2. Deliver the final `output/paper.tex`, `output/paper.bib`, and `output/paper.pdf` to the **User**.
 3. Summarize what was produced and list all output files.
 
 ## Guidelines

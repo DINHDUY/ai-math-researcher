@@ -66,16 +66,21 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    - Verify the abstract is self-contained and within journal length limits
    - Add MSC (Mathematics Subject Classification) codes and keywords
 
-9. **Compile to PDF.** After writing `output/{{basename}}.tex` and `output/{{basename}}.bib`, run the standard LaTeX compilation sequence from the `output/` directory:
+9. **Compile to PDF.** After writing `output/{{title}}.tex` and `output/{{title}}.bib`, run the compilation sequence from the `output/` directory. Run `bibtex` only when the manuscript uses a BibTeX-driven bibliography (i.e., `\bibliography{...}` is present, which causes `\bibdata` to appear in the `.aux` file):
 
    ```bash
    cd output
-   pdflatex {{basename}}
-   bibtex {{basename}}
-   pdflatex {{basename}}
-   pdflatex {{basename}}
+   pdflatex {{title}}
+   if grep -q '\\bibdata' {{title}}.aux; then
+     bibtex {{title}}
+     pdflatex {{title}}
+     pdflatex {{title}}
+   else
+     pdflatex {{title}}
+   fi
    ```
 
+   - Run `bibtex` only when `\bibdata` is found in the `.aux` file (i.e., the source uses `\bibliography{...}`). If the manuscript uses an inline `thebibliography` environment instead, skip `bibtex` and do one extra `pdflatex` pass to resolve cross-references.
    - The double `pdflatex` pass after `bibtex` ensures cross-references, citations, and the table of contents are fully resolved.
    - If `pdflatex` reports errors, diagnose and fix the `.tex` source, then re-run the full sequence.
    - Confirm `output/{{basename}}.pdf` exists and is non-empty after compilation.

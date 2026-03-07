@@ -9,10 +9,10 @@
 
 All input files from the Verified Bundle were read and analyzed:
 
-1. `<repo_root>/output/the_scout_1.md` - Complete literature review with 23 primary references, citations, and recent breakthroughs (2022-2025)
-2. `<repo_root>/output/the_architect_2.md` - Revised blueprint with Part I (expository survey) and Part II (computational contribution)
-3. `<repo_root>/output/the_verifier_2.md` - Verification report confirming all 7 original issues resolved, identifying functional form issue in conjectures
-4. `<repo_root>/output/the_red_teamer_2.md` - Stress test with verdict PASS WITH WARNINGS, detailed functional form analysis
+1. `output/the_scout_1.md` - Complete literature review with 23 primary references, citations, and recent breakthroughs (2022-2025)
+2. `output/the_architect_2.md` - Revised blueprint with Part I (expository survey) and Part II (computational contribution)
+3. `output/the_verifier_2.md` - Verification report confirming all 7 original issues resolved, identifying functional form issue in conjectures
+4. `output/the_red_teamer_2.md` - Stress test with verdict PASS WITH WARNINGS, detailed functional form analysis
 
 ---
 
@@ -238,18 +238,22 @@ All 23 \cite commands match bibliography entries:
 
 ## Compilation Results
 
-The manuscript uses an inline `thebibliography` environment rather than an external `.bib` file, so the pdflatex-only sequence was used (no `bibtex` step required):
+The manuscript was compiled using the standard BibTeX/LaTeX sequence:
 
 ```bash
 cd output
-pdflatex fermat_carmichael.tex  # First pass (cross-refs unresolved)
-pdflatex fermat_carmichael.tex  # Second pass (resolve labels)
-pdflatex fermat_carmichael.tex  # Final pass (all resolved)
+pdflatex fermat_carmichael  # First pass (cross-refs unresolved)
+bibtex fermat_carmichael    # Process bibliography database
+pdflatex fermat_carmichael  # Second pass (resolve citations)
+pdflatex fermat_carmichael  # Final pass (all resolved)
 ```
+
+The document uses `\bibliographystyle{amsplain}` and `\bibliography{fermat_carmichael}` to reference the external `fermat_carmichael.bib` database.
 
 ### Compilation Summary
 
 - **Pass 1:** Generated .aux, .toc, .out files; cited references undefined
+- **BibTeX:** Processed `fermat_carmichael.bib`, generated `fermat_carmichael.bbl`
 - **Pass 2:** Resolved all cross-references; "Label(s) may have changed" warning
 - **Pass 3:** All references stable; no warnings except minor overfull hbox (cosmetic)
 

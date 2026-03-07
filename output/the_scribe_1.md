@@ -137,10 +137,10 @@ Complete audit performed on final manuscript:
 
 ## Deliverables
 
-Three files written to `/Users/duy/repos/SDD/ai-math-researcher/output/`:
+Three files written to `output/`:
 
-1. **paper.tex** - Complete LaTeX source (600+ lines, amsart document class)
-2. **references.bib** - BibTeX bibliography with 35 entries
+1. **fermat_carmichael.tex** - Complete LaTeX source (600+ lines, amsart document class)
+2. **fermat_carmichael.bib** - BibTeX bibliography with 35 entries
 3. **the_scribe_1.md** - This report
 
 ---
@@ -151,10 +151,10 @@ To compile the manuscript:
 
 ```bash
 cd output
-pdflatex fermat_carmichael.tex
+pdflatex fermat_carmichael
 bibtex fermat_carmichael
-pdflatex fermat_carmichael.tex
-pdflatex fermat_carmichael.tex
+pdflatex fermat_carmichael
+pdflatex fermat_carmichael
 ```
 
 **Required Packages:** All standard in TeX Live and MiKTeX distributions
@@ -236,7 +236,6 @@ All seven original issues from Iteration 1 are genuinely resolved. The two new m
 Output files:
 - `output/fermat_carmichael.tex`
 - `output/fermat_carmichael.bib`
-- `output/fermat_carmichael.pdf`
 - `output/the_scribe_1.md`
 
 The manuscript is ready for review, compilation, or submission.

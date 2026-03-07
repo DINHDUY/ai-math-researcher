@@ -35,7 +35,4 @@
   pdflatex fermat_carmichael
   pdflatex fermat_carmichael
 
-  fermat_carmichael.tex uses an inline `thebibliography` environment, so only the pdflatex-only
-  sequence is required for that manuscript.
-
   

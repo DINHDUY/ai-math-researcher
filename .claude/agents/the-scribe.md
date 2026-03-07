@@ -69,32 +69,30 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    - Verify the abstract is self-contained and within journal length limits
    - Add MSC (Mathematics Subject Classification) codes and keywords
 
-9. **Compile to PDF.** After writing `output/{{title}}.tex`, run the compilation sequence from the `output/` directory. The sequence depends on how the bibliography is managed:
+9. **Compile to PDF.** After writing `output/{{basename}}.tex` and `output/{{basename}}.bib`, run the standard LaTeX compilation sequence from the `output/` directory.
 
-   **If the manuscript uses an external `.bib` file** (i.e., contains `\bibliography{...}`), run the full BibTeX sequence:
+   Use `{{basename}}` as the filesystem-safe name derived from the paper title (lowercase, spaces replaced with underscores, punctuation removed).
 
-   ```bash
-   cd output
-   pdflatex {{title}}
-   if grep -q '\\bibdata' {{title}}.aux; then
-     bibtex {{title}}
-     pdflatex {{title}}
-     pdflatex {{title}}
-   else
-     pdflatex {{title}}
-   fi
-   ```
-
-   **If the manuscript uses an inline `thebibliography` environment** (no external `.bib` file), skip `bibtex` and run only `pdflatex`:
+   **If the manuscript uses `\bibliography{...}` (BibTeX-driven):**
 
    ```bash
    cd output
-   pdflatex {{title}}
-   pdflatex {{title}}
-   pdflatex {{title}}
+   pdflatex {{basename}}
+   bibtex {{basename}}
+   pdflatex {{basename}}
+   pdflatex {{basename}}
    ```
 
-   - The double `pdflatex` pass after `bibtex` (or a triple pass without it) ensures cross-references and the table of contents are fully resolved.
+   **If the manuscript uses an embedded `thebibliography` environment (no `\bibliography{}`):**
+
+   ```bash
+   cd output
+   pdflatex {{basename}}
+   pdflatex {{basename}}
+   pdflatex {{basename}}
+   ```
+
+   - The double `pdflatex` pass after `bibtex` (or the triple pass without it) ensures cross-references, citations, and the table of contents are fully resolved.
    - If `pdflatex` reports errors, diagnose and fix the `.tex` source, then re-run the full sequence.
    - Confirm `output/{{basename}}.pdf` exists and is non-empty after compilation.
 

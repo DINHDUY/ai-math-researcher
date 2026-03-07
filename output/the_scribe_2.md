@@ -368,19 +368,19 @@ This refers to the formal verification work documented in `/Users/duy/repos/SDD/
 
 All deliverables written to the output directory:
 
-1. **Manuscript:** `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.tex`
+1. **Manuscript:** `output/fermat_carmichael.tex`
    - 545 lines of LaTeX source
    - Complete amsart document with proofs, tables, and bibliography
 
-2. **Bibliography:** `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.bib`
+2. **Bibliography:** `output/fermat_carmichael.bib`
    - 23 BibTeX entries
    - AMS citation style
 
-3. **PDF:** `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.pdf`
+3. **PDF:** `output/fermat_carmichael.pdf`
    - 12 pages, 307 KB
    - Compiled successfully with all cross-references resolved
 
-4. **This Report:** `/Users/duy/repos/SDD/ai-math-researcher/output/the_scribe_2.md`
+4. **This Report:** `output/the_scribe_2.md`
    - Complete documentation of process and decisions
 
 ---
@@ -415,4 +415,4 @@ The journal-ready LaTeX manuscript is complete and ready for submission. Key fea
 - `fermat_carmichael.pdf` (compiled PDF)
 - `the_scribe_2.md` (this report)
 
-All files are located in `/Users/duy/repos/SDD/ai-math-researcher/output/`.
+All files are located in `output/`.

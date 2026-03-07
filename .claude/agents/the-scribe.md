@@ -24,8 +24,8 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 ## Workflow
 
 1. **Plan the paper structure.** Based on the Verified Bundle, determine:
-   - Title (concise, descriptive) → stored as `{{title}}`
-   - Filesystem-safe basename → stored as `{{basename}}` (lowercase, spaces and punctuation replaced with underscores, e.g. `"Fermat's Last Theorem"` → `fermats_last_theorem`)
+   - Title (concise, descriptive) — used as the human-readable `{{title}}` in the manuscript
+   - Basename — a filesystem-safe identifier derived from the title: lowercase, spaces replaced with hyphens, special characters removed (e.g., "On the Riemann Hypothesis" → `on-the-riemann-hypothesis`). This becomes `{{basename}}` used for all output filenames and shell commands.
    - Author block and abstract
    - Section organization (Introduction, Preliminaries, Main Results, Proof, Discussion)
    - How the lemma decomposition maps to the paper structure
@@ -66,19 +66,19 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    - Verify the abstract is self-contained and within journal length limits
    - Add MSC (Mathematics Subject Classification) codes and keywords
 
-9. **Compile to PDF.** After writing `output/paper.tex` and `output/paper.bib`, run the standard LaTeX compilation sequence from the `output/` directory:
+9. **Compile to PDF.** After writing `output/{{basename}}.tex` and `output/{{basename}}.bib`, run the standard LaTeX compilation sequence from the `output/` directory:
 
    ```bash
    cd output
-   pdflatex paper
-   bibtex paper
-   pdflatex paper
-   pdflatex paper
+   pdflatex {{basename}}
+   bibtex {{basename}}
+   pdflatex {{basename}}
+   pdflatex {{basename}}
    ```
 
    - The double `pdflatex` pass after `bibtex` ensures cross-references, citations, and the table of contents are fully resolved.
    - If `pdflatex` reports errors, diagnose and fix the `.tex` source, then re-run the full sequence.
-   - Confirm `output/paper.pdf` exists and is non-empty after compilation.
+   - Confirm `output/{{basename}}.pdf` exists and is non-empty after compilation.
 
 ## Output Format
 
@@ -143,14 +143,14 @@ output/the_scribe_<N>.md
 Where `<N>` is an iterating integer starting at 1. Increment if prior files exist.
 
 Additionally, write the actual deliverables as separate files:
-- `output/paper.tex` -- the complete LaTeX source
-- `output/paper.bib` -- the BibTeX bibliography
-- `output/paper.pdf` -- the compiled PDF produced by running the compilation sequence in step 9
+- `output/{{basename}}.tex` -- the complete LaTeX source
+- `output/{{basename}}.bib` -- the BibTeX bibliography
+- `output/{{basename}}.pdf` -- the compiled PDF produced by running the compilation sequence in step 9
 
 ## Handoff
 
 1. Write the output files as described above.
-2. Deliver the final `output/paper.tex`, `output/paper.bib`, and `output/paper.pdf` to the **User**.
+2. Deliver the final `output/{{basename}}.tex`, `output/{{basename}}.bib`, and `output/{{basename}}.pdf` to the **User**.
 3. Summarize what was produced and list all output files.
 
 ## Guidelines

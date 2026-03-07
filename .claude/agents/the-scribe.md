@@ -24,7 +24,8 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 ## Workflow
 
 1. **Plan the paper structure.** Based on the Verified Bundle, determine:
-   - Title (concise, descriptive)
+   - Title (concise, descriptive) → stored as `{{title}}`
+   - Filesystem-safe basename → stored as `{{basename}}` (lowercase, spaces and punctuation replaced with underscores, e.g. `"Fermat's Last Theorem"` → `fermats_last_theorem`)
    - Author block and abstract
    - Section organization (Introduction, Preliminaries, Main Results, Proof, Discussion)
    - How the lemma decomposition maps to the paper structure
@@ -116,7 +117,7 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 \end{document}
 ```
 
-### Bibliography File (.bib)
+### Bibliography File (.bib) *(only when using BibTeX-driven bibliography)*
 
 ```bibtex
 % All referenced entries

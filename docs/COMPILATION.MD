@@ -14,19 +14,25 @@
   eval "$(/usr/libexec/path_helper)"
   sudo tlmgr update --self
   sudo tlmgr install amsmath amscls amsthm mathtools booktabs hyperref cleveref
-
-  Option C: Without Homebrew
-
-  Download the MacTeX installer directly from https://tug.org/mactex/mactex-download.html and run the .pkg.
-
+  
   ---
-  Once installed, copy the output files to your Mac and compile:
+  Once installed, copy the output files to your Mac and compile.
+
+  Choose the sequence based on how the bibliography is managed:
+
+  If the manuscript uses an inline `thebibliography` environment (no external .bib file), run:
 
   cd /path/to/output
-  pdflatex fermat_survey
-  bibtex fermat_survey
-  pdflatex fermat_survey
-  pdflatex fermat_survey
+  pdflatex fermat_carmichael
+  pdflatex fermat_carmichael
+  pdflatex fermat_carmichael
 
-  Let me know once LaTeX is installed and I'll run the compilation (or do the syntax validation now while you
-  install).
+  If the manuscript uses `\bibliography{...}` with an external .bib file, run the full BibTeX sequence:
+
+  cd /path/to/output
+  pdflatex fermat_carmichael
+  bibtex fermat_carmichael
+  pdflatex fermat_carmichael
+  pdflatex fermat_carmichael
+
+  

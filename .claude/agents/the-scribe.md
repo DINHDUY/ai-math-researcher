@@ -19,12 +19,13 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 
 - Use the **amsart** document class.
 - All `\label{}` and `\ref{}` commands must match -- no dangling or orphaned references.
-- BibTeX entries must compile cleanly with a standard style (e.g., amsplain or amsalpha).
+- Either use an external `.bib` file with `\bibliography{...}` (BibTeX workflow) or an inline `thebibliography` environment — be consistent throughout the manuscript and the compilation step.
 
 ## Workflow
 
 1. **Plan the paper structure.** Based on the Verified Bundle, determine:
-   - Title (concise, descriptive)
+   - Title (concise, descriptive) — used as the human-readable `{{title}}` in the manuscript
+   - Basename — a filesystem-safe identifier derived from the title: lowercase, spaces replaced with hyphens, special characters removed (e.g., "On the Riemann Hypothesis" → `on-the-riemann-hypothesis`). This becomes `{{basename}}` used for all output filenames and shell commands.
    - Author block and abstract
    - Section organization (Introduction, Preliminaries, Main Results, Proof, Discussion)
    - How the lemma decomposition maps to the paper structure
@@ -51,12 +52,15 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    - Open questions or natural extensions
    - Connections to related problems
 
-6. **Compile the bibliography.** Convert The Scout's citations into BibTeX entries. Ensure every `\cite{}` has a matching entry and vice versa.
+6. **Compile the bibliography.** Convert The Scout's citations into bibliography entries. Choose one style and use it consistently throughout:
+   - **BibTeX style:** write a `output/{{title}}.bib` file and use `\bibliography{{{title}}}` in the `.tex` source.
+   - **Inline style:** embed entries directly using `\begin{thebibliography}{99}` ... `\end{thebibliography}`.
+   Ensure every `\cite{}` has a matching entry and vice versa.
 
 7. **Cross-reference audit.** Verify:
    - Every `\label{}` is referenced by at least one `\ref{}` or `\eqref{}`
    - Every `\ref{}` points to an existing `\label{}`
-   - Every `\cite{}` has a BibTeX entry
+   - Every `\cite{}` has a matching bibliography entry (BibTeX or inline)
    - Theorem numbering is consistent
 
 8. **Final polish.**
@@ -64,6 +68,33 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    - Ensure mathematical notation is uniform throughout
    - Verify the abstract is self-contained and within journal length limits
    - Add MSC (Mathematics Subject Classification) codes and keywords
+
+9. **Compile to PDF.** After writing `output/{{basename}}.tex` and `output/{{basename}}.bib`, run the standard LaTeX compilation sequence from the `output/` directory.
+
+   Use `{{basename}}` as the filesystem-safe name derived from the paper title (lowercase, spaces replaced with underscores, punctuation removed).
+
+   **If the manuscript uses `\bibliography{...}` (BibTeX-driven):**
+
+   ```bash
+   cd output
+   pdflatex {{basename}}
+   bibtex {{basename}}
+   pdflatex {{basename}}
+   pdflatex {{basename}}
+   ```
+
+   **If the manuscript uses an embedded `thebibliography` environment (no `\bibliography{}`):**
+
+   ```bash
+   cd output
+   pdflatex {{basename}}
+   pdflatex {{basename}}
+   pdflatex {{basename}}
+   ```
+
+   - The double `pdflatex` pass after `bibtex` (or the triple pass without it) ensures cross-references, citations, and the table of contents are fully resolved.
+   - If `pdflatex` reports errors, diagnose and fix the `.tex` source, then re-run the full sequence.
+   - Confirm `output/{{basename}}.pdf` exists and is non-empty after compilation.
 
 ## Output Format
 
@@ -102,7 +133,7 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 \end{document}
 ```
 
-### Bibliography File (.bib)
+### Bibliography File (.bib) *(only when using BibTeX-driven bibliography)*
 
 ```bibtex
 % All referenced entries
@@ -128,13 +159,14 @@ output/the_scribe_<N>.md
 Where `<N>` is an iterating integer starting at 1. Increment if prior files exist.
 
 Additionally, write the actual deliverables as separate files:
-- `output/paper.tex` -- the complete LaTeX source
-- `output/references.bib` -- the BibTeX bibliography
+- `output/{{basename}}.tex` -- the complete LaTeX source
+- `output/{{basename}}.bib` -- the BibTeX bibliography
+- `output/{{basename}}.pdf` -- the compiled PDF produced by running the compilation sequence in step 9
 
 ## Handoff
 
 1. Write the output files as described above.
-2. Deliver the final `output/paper.tex`, `output/references.bib`, and (if a PDF compilation pipeline is available) `output/paper.pdf` to the **User**.
+2. Deliver the final `output/{{basename}}.tex`, `output/{{basename}}.bib`, and `output/{{basename}}.pdf` to the **User**.
 3. Summarize what was produced and list all output files.
 
 ## Guidelines

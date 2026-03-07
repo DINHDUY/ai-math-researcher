@@ -19,7 +19,7 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 
 - Use the **amsart** document class.
 - All `\label{}` and `\ref{}` commands must match -- no dangling or orphaned references.
-- BibTeX entries must compile cleanly with a standard style (e.g., amsplain or amsalpha).
+- Either use an external `.bib` file with `\bibliography{...}` (BibTeX workflow) or an inline `thebibliography` environment — be consistent throughout the manuscript and the compilation step.
 
 ## Workflow
 
@@ -52,12 +52,15 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    - Open questions or natural extensions
    - Connections to related problems
 
-6. **Compile the bibliography.** Convert The Scout's citations into BibTeX entries. Ensure every `\cite{}` has a matching entry and vice versa.
+6. **Compile the bibliography.** Convert The Scout's citations into bibliography entries. Choose one style and use it consistently throughout:
+   - **BibTeX style:** write a `output/{{title}}.bib` file and use `\bibliography{{{title}}}` in the `.tex` source.
+   - **Inline style:** embed entries directly using `\begin{thebibliography}{99}` ... `\end{thebibliography}`.
+   Ensure every `\cite{}` has a matching entry and vice versa.
 
 7. **Cross-reference audit.** Verify:
    - Every `\label{}` is referenced by at least one `\ref{}` or `\eqref{}`
    - Every `\ref{}` points to an existing `\label{}`
-   - Every `\cite{}` has a BibTeX entry
+   - Every `\cite{}` has a matching bibliography entry (BibTeX or inline)
    - Theorem numbering is consistent
 
 8. **Final polish.**
@@ -66,7 +69,9 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    - Verify the abstract is self-contained and within journal length limits
    - Add MSC (Mathematics Subject Classification) codes and keywords
 
-9. **Compile to PDF.** After writing `output/{{title}}.tex` and `output/{{title}}.bib`, run the compilation sequence from the `output/` directory. Run `bibtex` only when the manuscript uses a BibTeX-driven bibliography (i.e., `\bibliography{...}` is present, which causes `\bibdata` to appear in the `.aux` file):
+9. **Compile to PDF.** After writing `output/{{title}}.tex`, run the compilation sequence from the `output/` directory. The sequence depends on how the bibliography is managed:
+
+   **If the manuscript uses an external `.bib` file** (i.e., contains `\bibliography{...}`), run the full BibTeX sequence:
 
    ```bash
    cd output
@@ -80,8 +85,16 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
    fi
    ```
 
-   - Run `bibtex` only when `\bibdata` is found in the `.aux` file (i.e., the source uses `\bibliography{...}`). If the manuscript uses an inline `thebibliography` environment instead, skip `bibtex` and do one extra `pdflatex` pass to resolve cross-references.
-   - The double `pdflatex` pass after `bibtex` ensures cross-references, citations, and the table of contents are fully resolved.
+   **If the manuscript uses an inline `thebibliography` environment** (no external `.bib` file), skip `bibtex` and run only `pdflatex`:
+
+   ```bash
+   cd output
+   pdflatex {{title}}
+   pdflatex {{title}}
+   pdflatex {{title}}
+   ```
+
+   - The double `pdflatex` pass after `bibtex` (or a triple pass without it) ensures cross-references and the table of contents are fully resolved.
    - If `pdflatex` reports errors, diagnose and fix the `.tex` source, then re-run the full sequence.
    - Confirm `output/{{basename}}.pdf` exists and is non-empty after compilation.
 

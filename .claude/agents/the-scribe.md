@@ -24,7 +24,8 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 ## Workflow
 
 1. **Plan the paper structure.** Based on the Verified Bundle, determine:
-   - Title (concise, descriptive)
+   - Title (concise, descriptive) → stored as `{{title}}`
+   - Filesystem-safe basename → stored as `{{basename}}` (lowercase, spaces and punctuation replaced with underscores, e.g. `"Fermat's Last Theorem"` → `fermats_last_theorem`)
    - Author block and abstract
    - Section organization (Introduction, Preliminaries, Main Results, Proof, Discussion)
    - How the lemma decomposition maps to the paper structure
@@ -71,10 +72,10 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 
    ```bash
    cd output
-   pdflatex {{title}}
-   bibtex {{title}}
-   pdflatex {{title}}
-   pdflatex {{title}}
+   pdflatex {{basename}}
+   bibtex {{basename}}
+   pdflatex {{basename}}
+   pdflatex {{basename}}
    ```
 
    **If the manuscript uses an embedded `thebibliography` environment (no `.bib` file):**
@@ -99,7 +100,7 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 
    - The extra `pdflatex` pass after `bibtex` (when used) ensures cross-references, citations, and the table of contents are fully resolved.
    - If `pdflatex` reports errors, diagnose and fix the `.tex` source, then re-run the full sequence.
-   - Confirm `output/{{title}}.pdf` exists and is non-empty after compilation.
+   - Confirm `output/{{basename}}.pdf` exists and is non-empty after compilation.
 
 ## Output Format
 

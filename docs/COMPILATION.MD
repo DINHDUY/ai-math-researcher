@@ -19,9 +19,9 @@
   Once installed, copy the output files to your Mac and compile:
 
   cd /path/to/output
-  pdflatex paper
-  bibtex paper
-  pdflatex paper
-  pdflatex paper
+  pdflatex fermat_carmichael
+  bibtex fermat_carmichael
+  pdflatex fermat_carmichael
+  pdflatex fermat_carmichael
 
   

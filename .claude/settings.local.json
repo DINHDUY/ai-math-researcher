@@ -6,7 +6,8 @@
       "WebFetch(domain:math.dartmouth.edu)",
       "WebFetch(domain:www.cambridge.org)",
       "WebFetch(domain:www.semanticscholar.org)",
-      "Bash(pdflatex:*)"
+      "Bash(pdflatex:*)",
+      "Bash(bibtex:*)"
     ]
   }
 }

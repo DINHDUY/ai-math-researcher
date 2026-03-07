@@ -117,7 +117,7 @@ You receive **file paths** to the Verified Bundle -- the complete set of prior a
 \end{document}
 ```
 
-### Bibliography File (.bib)
+### Bibliography File (.bib) *(only when using BibTeX-driven bibliography)*
 
 ```bibtex
 % All referenced entries

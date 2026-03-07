@@ -9,10 +9,10 @@
 
 All input files from the Verified Bundle read and analyzed:
 
-- `/Users/duy/repos/SDD/ai-math-researcher/output/the_scout_1.md` (Citations and prior art - 23 primary references + 5 surveys)
-- `/Users/duy/repos/SDD/ai-math-researcher/output/the_architect_2.md` (Informal sketch and lemma decomposition, Iteration 2)
-- `/Users/duy/repos/SDD/ai-math-researcher/output/the_verifier_2.md` (Verification report - partial verification with one major issue in J1 functional form)
-- `/Users/duy/repos/SDD/ai-math-researcher/output/the_red_teamer_2.md` (Stress test report - PASS WITH WARNINGS)
+- `output/the_scout_1.md` (Citations and prior art - 23 primary references + 5 surveys)
+- `output/the_architect_2.md` (Informal sketch and lemma decomposition, Iteration 2)
+- `output/the_verifier_2.md` (Verification report - partial verification with one major issue in J1 functional form)
+- `output/the_red_teamer_2.md` (Stress test report - PASS WITH WARNINGS)
 
 ---
 
@@ -150,11 +150,11 @@ Three files written to `/Users/duy/repos/SDD/ai-math-researcher/output/`:
 To compile the manuscript:
 
 ```bash
-cd /Users/duy/repos/SDD/ai-math-researcher/output
-pdflatex paper.tex
-bibtex paper
-pdflatex paper.tex
-pdflatex paper.tex
+cd output
+pdflatex fermat_carmichael
+bibtex fermat_carmichael
+pdflatex fermat_carmichael
+pdflatex fermat_carmichael
 ```
 
 **Required Packages:** All standard in TeX Live and MiKTeX distributions
@@ -234,9 +234,9 @@ All seven original issues from Iteration 1 are genuinely resolved. The two new m
 ## Handoff Complete
 
 Output files:
-- `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.tex`
-- `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.bib`
-- `/Users/duy/repos/SDD/ai-math-researcher/output/fermat_carmichael.pdf`
-- `/Users/duy/repos/SDD/ai-math-researcher/output/the_scribe_1.md`
+- `output/fermat_carmichael.tex`
+- `output/fermat_carmichael.bib`
+- `output/fermat_carmichael.pdf`
+- `output/the_scribe_1.md`
 
 The manuscript is ready for review, compilation, or submission.

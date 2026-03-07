@@ -150,7 +150,7 @@ Three files written to `/Users/duy/repos/SDD/ai-math-researcher/output/`:
 To compile the manuscript:
 
 ```bash
-cd output/
+cd output
 pdflatex fermat_carmichael.tex
 bibtex fermat_carmichael
 pdflatex fermat_carmichael.tex

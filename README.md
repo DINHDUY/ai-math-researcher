@@ -19,7 +19,7 @@ Five subagents collaborate in sequence, each handing off to the next:
 Clone the repository:
 
 ```bash
-git clone https://github.com/DINHDUY/ai-match-researcher.git
+git clone https://github.com/DINHDUY/ai-math-researcher.git
 cd ai-match-researcher
 ```
 

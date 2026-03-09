@@ -14,6 +14,9 @@ Five subagents collaborate in sequence, each handing off to the next:
 | `/the-red-teamer` | Adversarial critic — stress-tests the verified proof for vacuous truths, circular reasoning, and edge cases |
 | `/the-scribe` | LaTeX production — renders the verified bundle into a journal-ready manuscript (`amsart` class) |
 
+<img src="docs/assets/workflow-lr.png" width="100%"/>
+Figure 1. High Level Workflow
+
 ## Usage
 
 Clone the repository:

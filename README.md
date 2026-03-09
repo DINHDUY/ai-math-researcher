@@ -39,3 +39,10 @@ You can also invoke any subagent individually if you want to start mid-pipeline,
 ## Output
 
 Results are written to `output/` as markdown reports per subagent (e.g., `the_scout_1.md`, `the_architect_1.md`, ...).
+
+## Example
+
+[**How Fermat's Little Theorem is applied in number theory or used in cryptography**](output/fermat_carmichael.pdf)
+
+
+
